@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111216">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MCU Planner">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>MCU Release Planner</title>
+<style>
+:root{color-scheme:dark;--bg:#101115;--panel:#191b22;--panel2:#20232c;--line:#30333d;--muted:#a2a5b0;--text:#f5f5f7;--red:#c8323c;--gold:#d7b66a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{padding:22px 18px 14px;position:sticky;top:0;background:rgba(16,17,21,.96);backdrop-filter:blur(16px);z-index:3;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:11px}.mark{width:40px;height:40px;border:1px solid #555965;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:23px;color:var(--gold)}.brand h1{font-size:16px;letter-spacing:1.4px;margin:0}.brand p{margin:3px 0 0;color:var(--muted);font-size:11px;letter-spacing:1.2px}
+main{max-width:850px;margin:auto;padding:16px 14px 110px}.topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:5px 2px 16px}.topline h2{font-size:28px;margin:0}.sub{color:var(--muted);font-size:12px;margin-top:4px}
+button,select,input{font:inherit;color:inherit}button{border:1px solid var(--line);background:var(--panel2);border-radius:11px;padding:10px 13px;cursor:pointer}button.primary{background:var(--red);border-color:var(--red);font-weight:650}button.quiet{background:transparent}select,input[type=text],input[type=number]{background:#111319;border:1px solid var(--line);border-radius:9px;padding:10px;width:100%;min-width:0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:17px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.stat strong{font-size:22px;display:block}.stat span{font-size:11px;color:var(--muted)}
+.yearbar{display:flex;gap:8px;align-items:center}.yearbar select{max-width:125px}.yearbar button{white-space:nowrap}
+.months{display:grid;gap:10px}.month{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.monthhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:11px}.monthname{font-weight:750;font-size:16px}.tag{font-size:10px;text-transform:uppercase;letter-spacing:.7px;padding:5px 8px;border-radius:20px;background:#292c35;color:#ddd}.tag.film{color:#f0c7ca;background:#44252a}.tag.série{color:#c5d9f4;background:#243347}.tag.special{color:#e8d9ad;background:#3d3524}
+.done{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}.done input{accent-color:var(--red);width:17px;height:17px}
+.field label{display:block;color:var(--muted);font-size:11px;margin:0 0 5px}.dates{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.dates input{text-align:center;padding:9px 5px}.titlefield{margin-top:10px}
+.logo-row{display:flex;gap:10px;align-items:center;margin-top:10px}.logo-preview{width:58px;height:48px;border:1px dashed #555965;border-radius:9px;display:grid;place-items:center;overflow:hidden;color:var(--muted);font-size:10px;text-align:center;background:#111319}.logo-preview img{max-width:100%;max-height:100%;object-fit:contain}.logo-row label{flex:1}
+.monthfooter{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}.monthfooter small{color:var(--muted);font-size:11px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.actions button{flex:1}
+.note{color:var(--muted);font-size:11px;line-height:1.5;margin:14px 3px}.year-actions{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.year-actions button{flex:1}
+nav{position:fixed;bottom:0;left:0;right:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(18,19,24,.97);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:4}
+nav button{max-width:850px;width:100%;border:0;background:transparent;color:var(--muted);font-size:12px}
+.modalback{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;width:min(100%,390px)}.modal h3{margin:0 0 14px}.modal .field{margin:10px 0}.modalbuttons{display:flex;gap:8px;margin-top:16px}.modalbuttons button{flex:1}
+#roadmapCanvas{width:100%;height:auto;border:1px solid var(--line);border-radius:12px;background:#101115;display:block}.roadmap-preview{display:none;margin-top:15px;background:var(--panel);padding:12px;border:1px solid var(--line);border-radius:14px}.roadmap-preview h3{margin:0 0 10px;font-size:15px}
+@media(min-width:650px){.months{grid-template-columns:1fr 1fr}.month{min-width:0}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="mark">M</div><div><h1>MARVEL STUDIOS</h1><p>RELEASE PLANNER</p></div></div></header>
+<main>
+ <div class="topline"><div><h2 id="yearHeading">2030</h2><div class="sub">Ton calendrier de sorties MCU</div></div><div class="yearbar"><select id="yearSelect" aria-label="Choisir une année"></select><button class="primary" id="addYear">＋ Année</button></div></div>
+ <section class="stats"><div class="stat"><strong id="validated">0</strong><span>SORTIES VALIDÉES</span></div><div class="stat"><strong id="planned">0</strong><span>PROJETS RENSEIGNÉS</span></div></section>
+ <div id="months" class="months"></div>
+ <div class="year-actions"><button class="primary" id="createRoadmap">Créer la roadmap de <span id="roadmapYearLabel">2030</span></button></div>
+ <section class="roadmap-preview" id="roadmapPreview"><h3>Aperçu de la roadmap annuelle</h3><canvas id="roadmapCanvas" width="1600" height="2200"></canvas><div class="actions"><button class="primary" id="downloadRoadmap">Enregistrer l'image PNG</button><button id="closeRoadmap">Fermer l'aperçu</button></div></section>
+ <p class="note">Les modifications et logos sont enregistrés automatiquement sur cet appareil. Pour conserver ou transférer ton calendrier, exporte une sauvegarde. Les roadmaps sont générées séparément, une année à la fois.</p>
+ <div class="actions"><button id="export">Exporter ma sauvegarde</button><button id="importBtn">Importer une sauvegarde</button><button class="quiet" id="reset">Réinitialiser</button><input id="fileInput" type="file" accept="application/json" hidden></div>
+</main>
+<nav><button id="homeBtn">M · MARVEL RELEASE PLANNER</button></nav>
+<div class="modalback" id="modalBack"><div class="modal"><h3>Ajouter une année</h3><div class="field"><label>Année à ajouter</label><input id="newYear" type="number" min="1900" max="9999" value="2031"></div><div class="modalbuttons"><button id="cancelModal">Annuler</button><button class="primary" id="confirmYear">Ajouter</button></div></div></div>
+<script>
+const MONTHS=[
+ ["Janvier","Série",["","",""]],["Février","Série",["","",""]],["Mars","Film",["13","20","27"]],
+ ["Avril","Special",["","",""]],["Mai","Série",["","",""]],["Juin","Série",["","",""]],
+ ["Juillet","Film",["17","25","31"]],["Août","Special",["","",""]],["Septembre","Série",["","",""]],
+ ["Octobre","Série",["","",""]],["Novembre","Special",["","",""]],["Décembre","Film",["11","18","25"]]
+];
+const KEY="mcu-release-planner-v2";
+let data=load(), current=2030;
+function freshYear(y){return {year:y,months:MONTHS.map(([month,type,dates])=>({month,type,dates:[...dates],title:"",done:false,logo:""}))}}
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&Array.isArray(d.years)&&d.years.length)return d}catch(e){}return {years:[freshYear(2030)]}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert("Stockage presque plein. Exporte une sauvegarde et utilise des logos plus légers.")}}
+function yearObj(){return data.years.find(y=>y.year===current)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function render(){
+ const sel=document.getElementById("yearSelect");sel.innerHTML=data.years.slice().sort((a,b)=>a.year-b.year).map(y=>`<option value="${y.year}">${y.year}</option>`).join("");sel.value=current;
+ const y=yearObj();document.getElementById("yearHeading").textContent=current;document.getElementById("roadmapYearLabel").textContent=current;
+ document.getElementById("validated").textContent=y.months.filter(m=>m.done).length;
+ document.getElementById("planned").textContent=y.months.filter(m=>m.title.trim()).length;
+ document.getElementById("months").innerHTML=y.months.map((m,i)=>`
+ <article class="month">
+  <div class="monthhead"><span class="monthname">${m.month}</span><span class="tag ${m.type.toLowerCase()}">${m.type}</span></div>
+  <div class="field"><label>Type de projet</label><select data-i="${i}" data-k="type">${["Film","Série","Special"].map(t=>`<option ${m.type===t?"selected":""}>${t}</option>`).join("")}</select></div>
+  <div class="field" style="margin-top:10px"><label>Dates candidates (jour du mois)</label><div class="dates">${m.dates.map((d,j)=>`<input type="text" inputmode="numeric" maxlength="2" placeholder="—" aria-label="Date candidate ${j+1} pour ${m.month}" value="${esc(d)}" data-i="${i}" data-date="${j}">`).join("")}</div></div>
+  <div class="field titlefield"><label>Titre du projet</label><input type="text" placeholder="Nom du film, de la série..." value="${esc(m.title)}" data-i="${i}" data-k="title"></div>
+  <div class="logo-row"><div class="logo-preview">${m.logo?`<img src="${m.logo}" alt="Logo du projet">`:"Logo"}</div><label><span style="display:block;color:var(--muted);font-size:11px;margin-bottom:5px">Logo du projet (facultatif)</span><input type="file" accept="image/*" data-logo="${i}" style="font-size:11px;max-width:100%"></label></div>
+  <div class="monthfooter"><label class="done"><input type="checkbox" data-i="${i}" data-k="done" ${m.done?"checked":""}> Sortie validée</label><button class="quiet" data-clear="${i}">Effacer</button></div>
+ </article>`).join("");
+ document.querySelectorAll("[data-i]").forEach(el=>{
+  const i=+el.dataset.i;
+  if(el.dataset.date!==undefined)el.addEventListener("change",()=>{yearObj().months[i].dates[+el.dataset.date]=el.value.trim();save()});
+  else if(el.dataset.k==="done")el.addEventListener("change",()=>{yearObj().months[i].done=el.checked;save();render()});
+  else el.addEventListener("change",()=>{yearObj().months[i][el.dataset.k]=el.value;save();render()});
+ });
+ document.querySelectorAll("[data-logo]").forEach(el=>el.addEventListener("change",async()=>{
+  const f=el.files[0];if(!f)return;if(!f.type.startsWith("image/"))return alert("Choisis un fichier image.");
+  const dataUrl=await resizeImage(f);yearObj().months[+el.dataset.logo].logo=dataUrl;save();render();
+ }));
+ document.querySelectorAll("[data-clear]").forEach(b=>b.addEventListener("click",()=>{const m=yearObj().months[+b.dataset.clear];m.title="";m.done=false;m.logo="";save();render()}));
+}
+function resizeImage(file){return new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>{const img=new Image();img.onload=()=>{const c=document.createElement("canvas"),max=700,scale=Math.min(1,max/Math.max(img.width,img.height));c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext("2d").drawImage(img,0,0,c.width,c.height);resolve(c.toDataURL("image/png"))};img.onerror=reject;img.src=fr.result};fr.onerror=reject;fr.readAsDataURL(file)})}
+function drawRoadmap(){
+ const y=yearObj(),c=document.getElementById("roadmapCanvas"),ctx=c.getContext("2d"),W=c.width,H=c.height;
+ ctx.fillStyle="#101115";ctx.fillRect(0,0,W,H);
+ ctx.fillStyle="#d7b66a";ctx.font="bold 42px Arial";ctx.fillText("MARVEL STUDIOS",100,110);
+ ctx.fillStyle="#f5f5f7";ctx.font="bold 104px Arial";ctx.fillText("ROADMAP",95,245);
+ ctx.fillStyle="#c8323c";ctx.fillRect(100,285,1400,8);
+ ctx.fillStyle="#f5f5f7";ctx.font="bold 150px Arial";ctx.fillText(String(current),100,470);
+ ctx.fillStyle="#a2a5b0";ctx.font="28px Arial";ctx.fillText("ANNUAL RELEASE SLATE",105,525);
+ const cols=2, gap=38, cardW=680, cardH=220, startY=600;
+ y.months.forEach((m,i)=>{
+  const col=i%cols,row=Math.floor(i/cols),x=100+col*(cardW+gap),yy=startY+row*(cardH+28);
+  ctx.fillStyle="#1b1e26";ctx.strokeStyle="#363a46";ctx.lineWidth=2;roundRect(ctx,x,yy,cardW,cardH,22);ctx.fill();ctx.stroke();
+  ctx.fillStyle=m.type==="Film"?"#c8323c":m.type==="Série"?"#385b83":"#806a37";roundRect(ctx,x+25,yy+24,125,38,16);ctx.fill();
+  ctx.fillStyle="#fff";ctx.font="bold 22px Arial";ctx.fillText(m.type.toUpperCase(),x+43,yy+51);
+  ctx.fillStyle="#f5f5f7";ctx.font="bold 31px Arial";ctx.fillText(m.month.toUpperCase(),x+25,yy+105);
+  ctx.fillStyle="#d7b66a";ctx.font="bold 27px Arial";ctx.fillText(m.dates.filter(Boolean).map(d=>d+" "+m.month).join("  /  ")||"DATE À DÉFINIR",x+25,yy+150);
+  ctx.fillStyle="#e8e8eb";ctx.font="bold 24px Arial";ctx.fillText(m.title?fitText(ctx,m.title,cardW-50):"PROJET À ANNONCER",x+25,yy+190);
+  if(m.logo){const im=new Image();im.onload=()=>{const maxW=150,maxH=100,s=Math.min(maxW/im.width,maxH/im.height);ctx.drawImage(im,x+cardW-180,yy+75,im.width*s,im.height*s)};im.src=m.logo}
+  if(m.done){ctx.fillStyle="#6fc69a";ctx.font="bold 18px Arial";ctx.fillText("✓ CONFIRMÉ",x+cardW-160,yy+35)}
+ });
+ ctx.fillStyle="#777b86";ctx.font="22px Arial";ctx.fillText("MARVEL RELEASE PLANNER  •  PERSONAL FAN PROJECT",100,H-65);
+}
+function fitText(ctx,t,max){let s=t;while(ctx.measureText(s).width>max&&s.length>4)s=s.slice(0,-2)+"…";return s}
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+document.getElementById("yearSelect").addEventListener("change",e=>{current=+e.target.value;render();document.getElementById("roadmapPreview").style.display="none"});
+const modal=document.getElementById("modalBack");
+document.getElementById("addYear").onclick=()=>{document.getElementById("newYear").value=Math.max(...data.years.map(y=>y.year))+1;modal.style.display="flex"};
+document.getElementById("cancelModal").onclick=()=>modal.style.display="none";
+document.getElementById("confirmYear").onclick=()=>{const n=+document.getElementById("newYear").value;if(!Number.isInteger(n)||n<1900||n>9999)return alert("Entre une année valide.");if(data.years.some(y=>y.year===n))return alert("Cette année existe déjà.");data.years.push(freshYear(n));current=n;save();modal.style.display="none";render()};
+document.getElementById("createRoadmap").onclick=()=>{drawRoadmap();document.getElementById("roadmapPreview").style.display="block";document.getElementById("roadmapPreview").scrollIntoView({behavior:"smooth"})};
+document.getElementById("downloadRoadmap").onclick=()=>{const a=document.createElement("a");a.download=`MCU-roadmap-${current}.png`;a.href=document.getElementById("roadmapCanvas").toDataURL("image/png");a.click()};
+document.getElementById("closeRoadmap").onclick=()=>document.getElementById("roadmapPreview").style.display="none";
+document.getElementById("export").onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="mon-calendrier-mcu.json";a.click();URL.revokeObjectURL(a.href)};
+document.getElementById("importBtn").onclick=()=>document.getElementById("fileInput").click();
+document.getElementById("fileInput").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.years))throw 0;data=d;current=data.years[0].year;save();render();alert("Sauvegarde importée.")}catch(err){alert("Fichier de sauvegarde invalide.")}e.target.value=""};
+document.getElementById("reset").onclick=()=>{if(confirm("Effacer toutes les années et recommencer en 2030 ?")){data={years:[freshYear(2030)]};current=2030;save();render()}};
+document.getElementById("homeBtn").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+render();
+</script>
+</body></html>

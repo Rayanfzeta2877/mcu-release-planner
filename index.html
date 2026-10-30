@@ -11,25 +11,21 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>MCU Release Planner</title>
 <style>
-:root{color-scheme:dark;--bg:#101115;--panel:#191b22;--panel2:#20232c;--line:#30333d;--muted:#a2a5b0;--text:#f5f5f7;--red:#c8323c;--gold:#d7b66a}
+:root{color-scheme:dark;--bg:#101115;--panel:#191b22;--panel2:#20232c;--line:#30333d;--muted:#a2a5b0;--text:#f5f5f7;--red:#c8323c;--gold:#d7b66a;--green:#6fc69a}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
 header{padding:22px 18px 14px;position:sticky;top:0;background:rgba(16,17,21,.96);backdrop-filter:blur(16px);z-index:3;border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:11px}.mark{width:40px;height:40px;border:1px solid #555965;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:23px;color:var(--gold)}.brand h1{font-size:16px;letter-spacing:1.4px;margin:0}.brand p{margin:3px 0 0;color:var(--muted);font-size:11px;letter-spacing:1.2px}
 main{max-width:850px;margin:auto;padding:16px 14px 110px}.topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:5px 2px 16px}.topline h2{font-size:28px;margin:0}.sub{color:var(--muted);font-size:12px;margin-top:4px}
-button,select,input{font:inherit;color:inherit}button{border:1px solid var(--line);background:var(--panel2);border-radius:11px;padding:10px 13px;cursor:pointer}button.primary{background:var(--red);border-color:var(--red);font-weight:650}button.quiet{background:transparent}select,input[type=text],input[type=number]{background:#111319;border:1px solid var(--line);border-radius:9px;padding:10px;width:100%;min-width:0}
+button,select,input{font:inherit;color:inherit}button{border:1px solid var(--line);background:var(--panel2);border-radius:11px;padding:10px 13px;cursor:pointer}button.primary{background:var(--red);border-color:var(--red);font-weight:650}button.quiet{background:transparent}button:disabled{opacity:.45;cursor:not-allowed}select,input[type=text],input[type=number]{background:#111319;border:1px solid var(--line);border-radius:9px;padding:10px;width:100%;min-width:0}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:17px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.stat strong{font-size:22px;display:block}.stat span{font-size:11px;color:var(--muted)}
-.yearbar{display:flex;gap:8px;align-items:center}.yearbar select{max-width:125px}.yearbar button{white-space:nowrap}
-.months{display:grid;gap:10px}.month{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.monthhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:11px}.monthname{font-weight:750;font-size:16px}.tag{font-size:10px;text-transform:uppercase;letter-spacing:.7px;padding:5px 8px;border-radius:20px;background:#292c35;color:#ddd}.tag.film{color:#f0c7ca;background:#44252a}.tag.série{color:#c5d9f4;background:#243347}.tag.special{color:#e8d9ad;background:#3d3524}
-.done{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}.done input{accent-color:var(--red);width:17px;height:17px}
-.field label{display:block;color:var(--muted);font-size:11px;margin:0 0 5px}.dates{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.dates input{text-align:center;padding:9px 5px}.titlefield{margin-top:10px}
-.logo-row{display:flex;gap:10px;align-items:center;margin-top:10px}.logo-preview{width:58px;height:48px;border:1px dashed #555965;border-radius:9px;display:grid;place-items:center;overflow:hidden;color:var(--muted);font-size:10px;text-align:center;background:#111319}.logo-preview img{max-width:100%;max-height:100%;object-fit:contain}.logo-row label{flex:1}
-.monthfooter{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}.monthfooter small{color:var(--muted);font-size:11px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.actions button{flex:1}
-.note{color:var(--muted);font-size:11px;line-height:1.5;margin:14px 3px}.year-actions{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.year-actions button{flex:1}
-nav{position:fixed;bottom:0;left:0;right:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(18,19,24,.97);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:4}
-nav button{max-width:850px;width:100%;border:0;background:transparent;color:var(--muted);font-size:12px}
-.modalback{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;width:min(100%,390px)}.modal h3{margin:0 0 14px}.modal .field{margin:10px 0}.modalbuttons{display:flex;gap:8px;margin-top:16px}.modalbuttons button{flex:1}
-#roadmapCanvas{width:100%;height:auto;border:1px solid var(--line);border-radius:12px;background:#101115;display:block}.roadmap-preview{display:none;margin-top:15px;background:var(--panel);padding:12px;border:1px solid var(--line);border-radius:14px}.roadmap-preview h3{margin:0 0 10px;font-size:15px}
+.yearbar{display:flex;gap:8px;align-items:center}.yearbar select{max-width:125px}.yearbar button{white-space:nowrap}.months{display:grid;gap:10px}.month{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.monthhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:11px}.monthname{font-weight:750;font-size:16px}.tag{font-size:10px;text-transform:uppercase;letter-spacing:.7px;padding:5px 8px;border-radius:20px;background:#292c35;color:#ddd}.tag.film{color:#f0c7ca;background:#44252a}.tag.série{color:#c5d9f4;background:#243347}.tag.special{color:#e8d9ad;background:#3d3524}
+.done{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}.done input{accent-color:var(--red);width:17px;height:17px}.field label{display:block;color:var(--muted);font-size:11px;margin:0 0 5px}.dates{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.dates input{text-align:center;padding:9px 5px}.titlefield{margin-top:10px}
+.date-choice{margin-top:10px}.date-choice select{border-color:#55503e}.logo-row{display:flex;gap:10px;align-items:center;margin-top:10px}.logo-preview{width:58px;height:48px;border:1px dashed #555965;border-radius:9px;display:grid;place-items:center;overflow:hidden;color:var(--muted);font-size:10px;text-align:center;background-color:#17191f;background-image:linear-gradient(45deg,#252832 25%,transparent 25%),linear-gradient(-45deg,#252832 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#252832 75%),linear-gradient(-45deg,transparent 75%,#252832 75%);background-size:12px 12px;background-position:0 0,0 6px,6px -6px,-6px 0}.logo-preview img{max-width:100%;max-height:100%;object-fit:contain}.logo-row label{flex:1}.monthfooter{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}.monthfooter small{color:var(--muted);font-size:11px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.actions button{flex:1}.note{color:var(--muted);font-size:11px;line-height:1.5;margin:14px 3px}.year-actions{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.year-actions button{flex:1}
+nav{position:fixed;bottom:0;left:0;right:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(18,19,24,.97);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:4}nav button{max-width:850px;width:100%;border:0;background:transparent;color:var(--muted);font-size:12px}
+.modalback{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:16px;z-index:10;overflow:auto}.modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;width:min(100%,440px);max-height:92dvh;overflow:auto}.modal h3{margin:0 0 14px}.modal .field{margin:11px 0}.modalbuttons{display:flex;gap:8px;margin-top:16px}.modalbuttons button{flex:1}.modal-note{font-size:11px;color:var(--muted);line-height:1.5}.range-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.checkline{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;margin-top:12px}.checkline input{accent-color:var(--red);width:17px;height:17px}
+.roadmap-preview{display:none;margin-top:15px;background:var(--panel);padding:12px;border:1px solid var(--line);border-radius:14px}.roadmap-preview h3{margin:0 0 10px;font-size:15px}#roadmapCanvas{width:100%;height:auto;border:1px solid var(--line);border-radius:12px;background:#101115;display:block}.preview-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.preview-actions button{flex:1}
+#logoCanvas{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:10px;background-color:#15171d;background-image:linear-gradient(45deg,#252832 25%,transparent 25%),linear-gradient(-45deg,#252832 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#252832 75%),linear-gradient(-45deg,transparent 75%,#252832 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0}.logo-toggle{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:12px 0}.logo-toggle input{accent-color:var(--red);width:17px;height:17px}
 @media(min-width:650px){.months{grid-template-columns:1fr 1fr}.month{min-width:0}}
 </style>
 </head>
@@ -39,13 +35,19 @@ nav button{max-width:850px;width:100%;border:0;background:transparent;color:var(
  <div class="topline"><div><h2 id="yearHeading">2030</h2><div class="sub">Ton calendrier de sorties MCU</div></div><div class="yearbar"><select id="yearSelect" aria-label="Choisir une année"></select><button class="primary" id="addYear">＋ Année</button></div></div>
  <section class="stats"><div class="stat"><strong id="validated">0</strong><span>SORTIES VALIDÉES</span></div><div class="stat"><strong id="planned">0</strong><span>PROJETS RENSEIGNÉS</span></div></section>
  <div id="months" class="months"></div>
- <div class="year-actions"><button class="primary" id="createRoadmap">Créer la roadmap de <span id="roadmapYearLabel">2030</span></button></div>
- <section class="roadmap-preview" id="roadmapPreview"><h3>Aperçu de la roadmap annuelle</h3><canvas id="roadmapCanvas" width="1600" height="2200"></canvas><div class="actions"><button class="primary" id="downloadRoadmap">Enregistrer l'image PNG</button><button id="closeRoadmap">Fermer l'aperçu</button></div></section>
- <p class="note">Les modifications et logos sont enregistrés automatiquement sur cet appareil. Pour conserver ou transférer ton calendrier, exporte une sauvegarde. Les roadmaps sont générées séparément, une année à la fois.</p>
+ <div class="year-actions"><button class="primary" id="createRoadmap">Générer une roadmap</button></div>
+ <section class="roadmap-preview" id="roadmapPreview"><h3>Aperçu de la roadmap MCU</h3><canvas id="roadmapCanvas" width="1800" height="1200"></canvas><div class="preview-actions"><button class="primary" id="downloadRoadmap">Enregistrer l'image PNG</button><button id="closeRoadmap">Fermer l'aperçu</button></div></section>
+ <p class="note">Les modifications et logos sont enregistrés automatiquement sur cet appareil. Les années sont indépendantes : modifier une année ne change pas les autres. Pour conserver ou transférer ton calendrier, exporte une sauvegarde.</p>
  <div class="actions"><button id="export">Exporter ma sauvegarde</button><button id="importBtn">Importer une sauvegarde</button><button class="quiet" id="reset">Réinitialiser</button><input id="fileInput" type="file" accept="application/json" hidden></div>
 </main>
 <nav><button id="homeBtn">M · MARVEL RELEASE PLANNER</button></nav>
-<div class="modalback" id="modalBack"><div class="modal"><h3>Ajouter une année</h3><div class="field"><label>Année à ajouter</label><input id="newYear" type="number" min="1900" max="9999" value="2031"></div><div class="modalbuttons"><button id="cancelModal">Annuler</button><button class="primary" id="confirmYear">Ajouter</button></div></div></div>
+
+<div class="modalback" id="yearModalBack"><div class="modal"><h3>Ajouter une année</h3><div class="field"><label>Année à ajouter</label><input id="newYear" type="number" min="1900" max="9999" value="2031"></div><p class="modal-note">Une nouvelle année reprend les dates candidates par défaut, sans copier les titres, logos ou modifications des autres années.</p><div class="modalbuttons"><button id="cancelYear">Annuler</button><button class="primary" id="confirmYear">Ajouter</button></div></div></div>
+
+<div class="modalback" id="roadmapModalBack"><div class="modal"><h3>Personnaliser la roadmap</h3><div class="field"><label>Numéro / intitulé de phase</label><input id="phaseTitle" type="text" value="Phase 1" placeholder="Ex. Phase 1"></div><div class="field"><label>Nom de la saga (facultatif)</label><input id="sagaTitle" type="text" placeholder="Ex. The Multiverse Saga"></div><div class="field"><label>Période de la roadmap</label><div class="range-fields"><div><label for="roadmapStart">De</label><input id="roadmapStart" type="number" min="1900" max="9999"></div><div><label for="roadmapEnd">À</label><input id="roadmapEnd" type="number" min="1900" max="9999"></div></div></div><p class="modal-note">Seuls les projets avec un titre, une date retenue et l’option « Inclure dans roadmap » activée apparaîtront.</p><p class="modal-note">Tu peux créer une roadmap sur une année ou plusieurs années. Les années absentes de ton calendrier seront simplement ignorées. Les mois vides ne seront jamais affichés.</p><div class="modalbuttons"><button id="cancelRoadmap">Annuler</button><button class="primary" id="generateRoadmapNow">Générer</button></div></div></div>
+
+<div class="modalback" id="logoModalBack"><div class="modal"><h3>Préparer le logo PNG</h3><canvas id="logoCanvas" width="700" height="400"></canvas><label class="logo-toggle"><input id="removeDarkBg" type="checkbox" checked> Supprimer automatiquement le fond noir / très sombre</label><p class="modal-note">L'aperçu montre le PNG avec transparence. Le détourage automatique vise le fond sombre relié aux bords de l'image. Vérifie les lettres et les détails avant d'enregistrer.</p><div class="modalbuttons"><button id="cancelLogo">Annuler</button><button class="primary" id="saveLogo">Enregistrer le PNG</button></div></div></div>
+
 <script>
 const MONTHS=[
  ["Janvier","Série",["","",""]],["Février","Série",["","",""]],["Mars","Film",["13","20","27"]],
@@ -54,77 +56,111 @@ const MONTHS=[
  ["Octobre","Série",["","",""]],["Novembre","Special",["","",""]],["Décembre","Film",["11","18","25"]]
 ];
 const KEY="mcu-release-planner-v2";
-let data=load(), current=2030;
-function freshYear(y){return {year:y,months:MONTHS.map(([month,type,dates])=>({month,type,dates:[...dates],title:"",done:false,logo:""}))}}
+let data=load(),current=2030,pendingLogo=null,pendingLogoFileName="logo";
+normalize();
+function freshYear(y){return {year:y,months:MONTHS.map(([month,type,dates])=>({month,type,dates:[...dates],selectedDate:"",title:"",done:false,logo:"",includeRoadmap:true}))}}
+function normalize(){data.years.forEach(y=>{if(!Array.isArray(y.months))y.months=[];y.months.forEach((m,i)=>{if(!Array.isArray(m.dates))m.dates=["","",""];if(m.selectedDate===undefined)m.selectedDate="";if(!m.selectedDate){const valid=m.dates.map(v=>String(v||"").trim()).filter(v=>v&&/^\d{1,2}$/.test(v));if(valid.length===1)m.selectedDate=valid[0]}if(m.includeRoadmap===undefined)m.includeRoadmap=true;if(m.logo===undefined)m.logo="";m.title=String(m.title||"");if(m.done===undefined)m.done=false;if(!m.month&&MONTHS[i])m.month=MONTHS[i][0];if(!m.type&&MONTHS[i])m.type=MONTHS[i][1]})})}
 function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&Array.isArray(d.years)&&d.years.length)return d}catch(e){}return {years:[freshYear(2030)]}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert("Stockage presque plein. Exporte une sauvegarde et utilise des logos plus légers.")}}
-function yearObj(){return data.years.find(y=>y.year===current)}
+function yearObj(y=current){return data.years.find(a=>a.year===y)}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function selectedLabel(m){return m.selectedDate?`${m.selectedDate} ${m.month}`:"Aucune date retenue"}
 function render(){
  const sel=document.getElementById("yearSelect");sel.innerHTML=data.years.slice().sort((a,b)=>a.year-b.year).map(y=>`<option value="${y.year}">${y.year}</option>`).join("");sel.value=current;
- const y=yearObj();document.getElementById("yearHeading").textContent=current;document.getElementById("roadmapYearLabel").textContent=current;
+ const y=yearObj();document.getElementById("yearHeading").textContent=current;
  document.getElementById("validated").textContent=y.months.filter(m=>m.done).length;
  document.getElementById("planned").textContent=y.months.filter(m=>m.title.trim()).length;
- document.getElementById("months").innerHTML=y.months.map((m,i)=>`
- <article class="month">
-  <div class="monthhead"><span class="monthname">${m.month}</span><span class="tag ${m.type.toLowerCase()}">${m.type}</span></div>
-  <div class="field"><label>Type de projet</label><select data-i="${i}" data-k="type">${["Film","Série","Special"].map(t=>`<option ${m.type===t?"selected":""}>${t}</option>`).join("")}</select></div>
-  <div class="field" style="margin-top:10px"><label>Dates candidates (jour du mois)</label><div class="dates">${m.dates.map((d,j)=>`<input type="text" inputmode="numeric" maxlength="2" placeholder="—" aria-label="Date candidate ${j+1} pour ${m.month}" value="${esc(d)}" data-i="${i}" data-date="${j}">`).join("")}</div></div>
+ document.getElementById("months").innerHTML=y.months.map((m,i)=>{
+  const options=m.dates.map(d=>String(d||"").trim()).filter(d=>d&&/^\d{1,2}$/.test(d)).map(d=>`<option value="${esc(d)}" ${String(m.selectedDate)===d?"selected":""}>${esc(d)} ${m.month}</option>`).join("");
+  return `<article class="month"><div class="monthhead"><span class="monthname">${esc(m.month)}</span><span class="tag ${m.type.toLowerCase()}">${esc(m.type)}</span></div>
+  <div class="field"><label>Type de projet</label><select data-i="${i}" data-k="type">${["Film","Série","Special"].map(t=>`<option value="${t}" ${m.type===t?"selected":""}>${t}</option>`).join("")}</select></div>
+  <div class="field" style="margin-top:10px"><label>Dates candidates (jour du mois)</label><div class="dates">${m.dates.map((d,j)=>`<input type="text" inputmode="numeric" maxlength="2" placeholder="—" aria-label="Date candidate ${j+1} pour ${esc(m.month)}" value="${esc(d)}" data-i="${i}" data-date="${j}">`).join("")}</div></div>
+  <div class="field date-choice"><label>Date retenue pour la sortie</label><select data-i="${i}" data-k="selectedDate"><option value="">Choisir une date…</option>${options}</select></div>
   <div class="field titlefield"><label>Titre du projet</label><input type="text" placeholder="Nom du film, de la série..." value="${esc(m.title)}" data-i="${i}" data-k="title"></div>
-  <div class="logo-row"><div class="logo-preview">${m.logo?`<img src="${m.logo}" alt="Logo du projet">`:"Logo"}</div><label><span style="display:block;color:var(--muted);font-size:11px;margin-bottom:5px">Logo du projet (facultatif)</span><input type="file" accept="image/*" data-logo="${i}" style="font-size:11px;max-width:100%"></label></div>
-  <div class="monthfooter"><label class="done"><input type="checkbox" data-i="${i}" data-k="done" ${m.done?"checked":""}> Sortie validée</label><button class="quiet" data-clear="${i}">Effacer</button></div>
- </article>`).join("");
- document.querySelectorAll("[data-i]").forEach(el=>{
-  const i=+el.dataset.i;
-  if(el.dataset.date!==undefined)el.addEventListener("change",()=>{yearObj().months[i].dates[+el.dataset.date]=el.value.trim();save()});
-  else if(el.dataset.k==="done")el.addEventListener("change",()=>{yearObj().months[i].done=el.checked;save();render()});
+  <div class="logo-row"><div class="logo-preview">${m.logo?`<img src="${m.logo}" alt="Logo du projet">`:"Logo"}</div><label><span style="display:block;color:var(--muted);font-size:11px;margin-bottom:5px">Logo du projet (PNG transparent conseillé)</span><input type="file" accept="image/*" data-logo="${i}" style="font-size:11px;max-width:100%"></label></div>
+  <div class="monthfooter"><label class="done"><input type="checkbox" data-i="${i}" data-k="done" ${m.done?"checked":""}> Sortie validée</label><label class="done"><input type="checkbox" data-i="${i}" data-k="includeRoadmap" ${m.includeRoadmap!==false?"checked":""}> Inclure dans roadmap</label><button class="quiet" data-clear="${i}">Effacer le projet</button></div></article>`
+ }).join("");
+ document.querySelectorAll("[data-i]").forEach(el=>{const i=+el.dataset.i;
+  if(el.dataset.date!==undefined)el.addEventListener("change",()=>{const m=yearObj().months[i];m.dates[+el.dataset.date]=el.value.trim();if(m.selectedDate&&!m.dates.map(String).includes(String(m.selectedDate)))m.selectedDate="";save();render()});
+  else if(el.dataset.k==="done"||el.dataset.k==="includeRoadmap")el.addEventListener("change",()=>{yearObj().months[i][el.dataset.k]=el.checked;save();render()});
   else el.addEventListener("change",()=>{yearObj().months[i][el.dataset.k]=el.value;save();render()});
  });
- document.querySelectorAll("[data-logo]").forEach(el=>el.addEventListener("change",async()=>{
-  const f=el.files[0];if(!f)return;if(!f.type.startsWith("image/"))return alert("Choisis un fichier image.");
-  const dataUrl=await resizeImage(f);yearObj().months[+el.dataset.logo].logo=dataUrl;save();render();
- }));
- document.querySelectorAll("[data-clear]").forEach(b=>b.addEventListener("click",()=>{const m=yearObj().months[+b.dataset.clear];m.title="";m.done=false;m.logo="";save();render()}));
+ document.querySelectorAll("[data-logo]").forEach(el=>el.addEventListener("change",async()=>{const f=el.files[0];if(!f)return;if(!f.type.startsWith("image/"))return alert("Choisis un fichier image.");try{pendingLogo=await loadLogoSource(f);pendingLogoFileName=f.name;document.getElementById("removeDarkBg").checked=true;drawLogoPreview();document.getElementById("logoModalBack").style.display="flex";document.getElementById("saveLogo").dataset.month=el.dataset.logo}catch(e){alert("Impossible de lire cette image. Essaie un PNG, JPG ou WebP.")}el.value=""}));
+ document.querySelectorAll("[data-clear]").forEach(b=>b.addEventListener("click",()=>{const m=yearObj().months[+b.dataset.clear];m.title="";m.done=false;m.logo="";m.selectedDate="";m.includeRoadmap=true;save();render()}));
 }
-function resizeImage(file){return new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>{const img=new Image();img.onload=()=>{const c=document.createElement("canvas"),max=700,scale=Math.min(1,max/Math.max(img.width,img.height));c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext("2d").drawImage(img,0,0,c.width,c.height);resolve(c.toDataURL("image/png"))};img.onerror=reject;img.src=fr.result};fr.onerror=reject;fr.readAsDataURL(file)})}
-function drawRoadmap(){
- const y=yearObj(),c=document.getElementById("roadmapCanvas"),ctx=c.getContext("2d"),W=c.width,H=c.height;
- ctx.fillStyle="#101115";ctx.fillRect(0,0,W,H);
- ctx.fillStyle="#d7b66a";ctx.font="bold 42px Arial";ctx.fillText("MARVEL STUDIOS",100,110);
- ctx.fillStyle="#f5f5f7";ctx.font="bold 104px Arial";ctx.fillText("ROADMAP",95,245);
- ctx.fillStyle="#c8323c";ctx.fillRect(100,285,1400,8);
- ctx.fillStyle="#f5f5f7";ctx.font="bold 150px Arial";ctx.fillText(String(current),100,470);
- ctx.fillStyle="#a2a5b0";ctx.font="28px Arial";ctx.fillText("ANNUAL RELEASE SLATE",105,525);
- const cols=2, gap=38, cardW=680, cardH=220, startY=600;
- y.months.forEach((m,i)=>{
-  const col=i%cols,row=Math.floor(i/cols),x=100+col*(cardW+gap),yy=startY+row*(cardH+28);
-  ctx.fillStyle="#1b1e26";ctx.strokeStyle="#363a46";ctx.lineWidth=2;roundRect(ctx,x,yy,cardW,cardH,22);ctx.fill();ctx.stroke();
-  ctx.fillStyle=m.type==="Film"?"#c8323c":m.type==="Série"?"#385b83":"#806a37";roundRect(ctx,x+25,yy+24,125,38,16);ctx.fill();
-  ctx.fillStyle="#fff";ctx.font="bold 22px Arial";ctx.fillText(m.type.toUpperCase(),x+43,yy+51);
-  ctx.fillStyle="#f5f5f7";ctx.font="bold 31px Arial";ctx.fillText(m.month.toUpperCase(),x+25,yy+105);
-  ctx.fillStyle="#d7b66a";ctx.font="bold 27px Arial";ctx.fillText(m.dates.filter(Boolean).map(d=>d+" "+m.month).join("  /  ")||"DATE À DÉFINIR",x+25,yy+150);
-  ctx.fillStyle="#e8e8eb";ctx.font="bold 24px Arial";ctx.fillText(m.title?fitText(ctx,m.title,cardW-50):"PROJET À ANNONCER",x+25,yy+190);
-  if(m.logo){const im=new Image();im.onload=()=>{const maxW=150,maxH=100,s=Math.min(maxW/im.width,maxH/im.height);ctx.drawImage(im,x+cardW-180,yy+75,im.width*s,im.height*s)};im.src=m.logo}
-  if(m.done){ctx.fillStyle="#6fc69a";ctx.font="bold 18px Arial";ctx.fillText("✓ CONFIRMÉ",x+cardW-160,yy+35)}
+function loadLogoSource(file){return new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=fr.result};fr.onerror=reject;fr.readAsDataURL(file)})}
+function processLogo(removeBg){
+ const img=pendingLogo;if(!img)return null;const max=1000,scale=Math.min(1,max/Math.max(img.width,img.height));const w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale));
+ const src=document.createElement("canvas");src.width=w;src.height=h;const sctx=src.getContext("2d",{willReadFrequently:true});sctx.drawImage(img,0,0,w,h);const im=sctx.getImageData(0,0,w,h),p=im.data;
+ if(removeBg){const n=w*h,seen=new Uint8Array(n),q=new Int32Array(n),isBg=(idx)=>{const k=idx*4,r=p[k],g=p[k+1],b=p[k+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);return mx<112&&(mx-mn)<48};let head=0,tail=0;
+  const push=(idx)=>{if(idx<0||idx>=n||seen[idx]||!isBg(idx))return;seen[idx]=1;q[tail++]=idx};
+  for(let x=0;x<w;x++){push(x);push((h-1)*w+x)}for(let y=0;y<h;y++){push(y*w);push(y*w+w-1)}
+  while(head<tail){const idx=q[head++],x=idx%w;if(x>0)push(idx-1);if(x<w-1)push(idx+1);if(idx>=w)push(idx-w);if(idx<n-w)push(idx+w)}
+  for(let i=0;i<n;i++)if(seen[i]){const k=i*4,brightness=Math.max(p[k],p[k+1],p[k+2]);p[k+3]=brightness<48?0:Math.round(255*Math.min(1,(brightness-35)/70))}
+ }
+ sctx.putImageData(im,0,0);
+ let minX=w,minY=h,maxX=-1,maxY=-1;const out=sctx.getImageData(0,0,w,h).data;
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(out[(y*w+x)*4+3]>8){if(x<minX)minX=x;if(x>maxX)maxX=x;if(y<minY)minY=y;if(y>maxY)maxY=y}
+ if(maxX<minX||maxY<minY)return src.toDataURL("image/png");
+ const pad= Math.max(4,Math.round(Math.min(w,h)*.025)),x0=Math.max(0,minX-pad),y0=Math.max(0,minY-pad),cw=Math.min(w-x0,maxX-minX+1+pad*2),ch=Math.min(h-y0,maxY-minY+1+pad*2);
+ const cropped=document.createElement("canvas");cropped.width=cw;cropped.height=ch;cropped.getContext("2d").drawImage(src,x0,y0,cw,ch,0,0,cw,ch);return cropped.toDataURL("image/png");
+}
+function drawLogoPreview(){const canvas=document.getElementById("logoCanvas"),ctx=canvas.getContext("2d");ctx.clearRect(0,0,canvas.width,canvas.height);const url=processLogo(document.getElementById("removeDarkBg").checked);const im=new Image();im.onload=()=>{const s=Math.min((canvas.width-40)/im.width,(canvas.height-40)/im.height);const w=im.width*s,h=im.height*s;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(im,(canvas.width-w)/2,(canvas.height-h)/2,w,h)};im.src=url}
+document.getElementById("removeDarkBg").addEventListener("change",drawLogoPreview);
+document.getElementById("cancelLogo").onclick=()=>{document.getElementById("logoModalBack").style.display="none";pendingLogo=null};
+document.getElementById("saveLogo").onclick=()=>{if(!pendingLogo)return;const url=processLogo(document.getElementById("removeDarkBg").checked);yearObj().months[+document.getElementById("saveLogo").dataset.month].logo=url;save();pendingLogo=null;document.getElementById("logoModalBack").style.display="none";render()};
+
+const monthOrder=Object.fromEntries(MONTHS.map((m,i)=>[m[0],i]));
+function makeRoadmapProjects(start,end){const result=[];data.years.filter(y=>y.year>=start&&y.year<=end).sort((a,b)=>a.year-b.year).forEach(y=>{const entries=y.months.map(m=>({...m,year:y.year})).filter(m=>String(m.title||"").trim()&&String(m.selectedDate||"").trim()&&m.includeRoadmap!==false).sort((a,b)=>(monthOrder[a.month]??99)-(monthOrder[b.month]??99)||Number(a.selectedDate)-Number(b.selectedDate));if(entries.length)result.push({year:y.year,entries})});return result}
+function wrapText(ctx,text,x,y,maxWidth,lineHeight,maxLines=2){const words=String(text).split(/\s+/);let line="",lines=[];for(const word of words){const test=line?line+" "+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word}else line=test}if(line)lines.push(line);if(lines.length>maxLines){lines=lines.slice(0,maxLines);let last=lines[maxLines-1];while(ctx.measureText(last+"…").width>maxWidth&&last.length>2)last=last.slice(0,-1);lines[maxLines-1]=last+"…"}lines.forEach((v,i)=>ctx.fillText(v,x,y+i*lineHeight))}
+function rounded(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+async function drawRoadmap(settings){
+ const groups=makeRoadmapProjects(settings.start,settings.end),all=groups.flatMap(g=>g.entries);const loadedLogos=new Map();await Promise.all(all.filter(p=>p.logo).map(p=>new Promise(resolve=>{const im=new Image();im.onload=()=>{loadedLogos.set(p,im);resolve()};im.onerror=resolve;im.src=p.logo})));const canvas=document.getElementById("roadmapCanvas"),ctx=canvas.getContext("2d"),W=1800,margin=105,gap=34,cardW=(W-margin*2-gap)/2,cardH=300,yearHeader=100,top=540,rowGap=28;
+ let H=top+70;groups.forEach(g=>{H+=yearHeader+Math.ceil(g.entries.length/2)*(cardH+rowGap)+35});H+=115;canvas.width=W;canvas.height=Math.max(1200,H);
+ ctx.fillStyle="#0b0c10";ctx.fillRect(0,0,W,H);
+ const grad=ctx.createLinearGradient(0,0,W,H);grad.addColorStop(0,"#151821");grad.addColorStop(.5,"#0b0c10");grad.addColorStop(1,"#171116");ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+ ctx.textAlign="center";ctx.fillStyle="#d7b66a";ctx.font="bold 48px Arial";ctx.fillText("MARVEL STUDIOS",W/2,105);
+ ctx.fillStyle="#c8323c";ctx.fillRect(W/2-180,145,360,5);
+ ctx.fillStyle="#f5f5f7";ctx.font="bold 100px Arial";ctx.fillText((settings.phase||"PHASE 1").toUpperCase(),W/2,290);
+ if(settings.saga){ctx.fillStyle="#d7b66a";ctx.font="bold 34px Arial";ctx.fillText(settings.saga.toUpperCase(),W/2,355)}
+ ctx.fillStyle="#b9bbc4";ctx.font="bold 48px Arial";ctx.fillText(settings.start===settings.end?String(settings.start):`${settings.start} — ${settings.end}`,W/2,435);
+ ctx.fillStyle="#686d79";ctx.font="22px Arial";ctx.fillText("THEATRICAL & STREAMING RELEASES",W/2,485);
+ let y=top;
+ groups.forEach(group=>{
+  ctx.textAlign="left";ctx.fillStyle="#d7b66a";ctx.font="bold 54px Arial";ctx.fillText(String(group.year),margin,y+57);
+  ctx.fillStyle="#343844";ctx.fillRect(margin+190,y+27,W-margin*2-190,2);y+=yearHeader;
+  group.entries.forEach((p,i)=>{
+   const col=i%2,row=Math.floor(i/2),x=margin+col*(cardW+gap),cy=y+row*(cardH+rowGap);
+   ctx.fillStyle="#171a22";ctx.strokeStyle="#3b3f4b";ctx.lineWidth=2;rounded(ctx,x,cy,cardW,cardH,24);ctx.fill();ctx.stroke();
+   ctx.fillStyle=p.type==="Film"?"#9f2630":p.type==="Série"?"#31547c":"#76602f";rounded(ctx,x+24,cy+22,145,40,18);ctx.fill();
+   ctx.textAlign="center";ctx.fillStyle="#fff";ctx.font="bold 20px Arial";ctx.fillText(p.type.toUpperCase(),x+96,cy+49);
+   const day=String(p.selectedDate).padStart(2,"0"),mi=(monthOrder[p.month]??0);ctx.textAlign="left";ctx.fillStyle="#d7b66a";ctx.font="bold 34px Arial";ctx.fillText(`${day} ${p.month.toUpperCase()} ${p.year}`,x+26,cy+112);
+   if(p.logo&&loadedLogos.has(p)){const im=loadedLogos.get(p),maxW=cardW-70,maxH=115,s=Math.min(maxW/im.width,maxH/im.height);const iw=im.width*s,ih=im.height*s;ctx.drawImage(im,x+(cardW-iw)/2,cy+140+(maxH-ih)/2,iw,ih)}
+   else{ctx.fillStyle="#f4f4f6";ctx.font="bold 35px Arial";wrapText(ctx,p.title,x+28,cy+190,cardW-56,43,2)}
+   if(p.done){ctx.textAlign="right";ctx.fillStyle="#6fc69a";ctx.font="bold 18px Arial";ctx.fillText("DATE VALIDÉE",x+cardW-25,cy+49)}
+  });
+  y+=Math.ceil(group.entries.length/2)*(cardH+rowGap)+35;
  });
- ctx.fillStyle="#777b86";ctx.font="22px Arial";ctx.fillText("MARVEL RELEASE PLANNER  •  PERSONAL FAN PROJECT",100,H-65);
+ ctx.textAlign="center";ctx.fillStyle="#777b86";ctx.font="20px Arial";ctx.fillText("MARVEL RELEASE PLANNER  •  FAN-MADE ROADMAP",W/2,H-48);
+ if(!all.length){ctx.fillStyle="#b9bbc4";ctx.font="32px Arial";ctx.fillText("AUCUN PROJET AVEC TITRE ET DATE RETENUE",W/2,top+80)}
 }
-function fitText(ctx,t,max){let s=t;while(ctx.measureText(s).width>max&&s.length>4)s=s.slice(0,-2)+"…";return s}
-function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+
+const yearModal=document.getElementById("yearModalBack"),roadmapModal=document.getElementById("roadmapModalBack");
 document.getElementById("yearSelect").addEventListener("change",e=>{current=+e.target.value;render();document.getElementById("roadmapPreview").style.display="none"});
-const modal=document.getElementById("modalBack");
-document.getElementById("addYear").onclick=()=>{document.getElementById("newYear").value=Math.max(...data.years.map(y=>y.year))+1;modal.style.display="flex"};
-document.getElementById("cancelModal").onclick=()=>modal.style.display="none";
-document.getElementById("confirmYear").onclick=()=>{const n=+document.getElementById("newYear").value;if(!Number.isInteger(n)||n<1900||n>9999)return alert("Entre une année valide.");if(data.years.some(y=>y.year===n))return alert("Cette année existe déjà.");data.years.push(freshYear(n));current=n;save();modal.style.display="none";render()};
-document.getElementById("createRoadmap").onclick=()=>{drawRoadmap();document.getElementById("roadmapPreview").style.display="block";document.getElementById("roadmapPreview").scrollIntoView({behavior:"smooth"})};
-document.getElementById("downloadRoadmap").onclick=()=>{const a=document.createElement("a");a.download=`MCU-roadmap-${current}.png`;a.href=document.getElementById("roadmapCanvas").toDataURL("image/png");a.click()};
+document.getElementById("addYear").onclick=()=>{document.getElementById("newYear").value=Math.max(...data.years.map(y=>y.year))+1;yearModal.style.display="flex"};
+document.getElementById("cancelYear").onclick=()=>yearModal.style.display="none";
+document.getElementById("confirmYear").onclick=()=>{const n=+document.getElementById("newYear").value;if(!Number.isInteger(n)||n<1900||n>9999)return alert("Entre une année valide.");if(data.years.some(y=>y.year===n))return alert("Cette année existe déjà.");data.years.push(freshYear(n));current=n;save();yearModal.style.display="none";render()};
+document.getElementById("createRoadmap").onclick=()=>{document.getElementById("phaseTitle").value="Phase 1";document.getElementById("sagaTitle").value="";document.getElementById("roadmapStart").value=current;document.getElementById("roadmapEnd").value=current;roadmapModal.style.display="flex"};
+document.getElementById("cancelRoadmap").onclick=()=>roadmapModal.style.display="none";
+document.getElementById("generateRoadmapNow").onclick=async()=>{const phase=document.getElementById("phaseTitle").value.trim()||"Phase 1",saga=document.getElementById("sagaTitle").value.trim(),start=+document.getElementById("roadmapStart").value,end=+document.getElementById("roadmapEnd").value;if(!Number.isInteger(start)||!Number.isInteger(end)||start<1900||end>9999||end<start)return alert("Vérifie les années de début et de fin.");const button=document.getElementById("generateRoadmapNow");button.disabled=true;button.textContent="Génération…";try{await drawRoadmap({phase,saga,start,end})}finally{button.disabled=false;button.textContent="Générer"}roadmapModal.style.display="none";const preview=document.getElementById("roadmapPreview");preview.style.display="block";preview.scrollIntoView({behavior:"smooth"})};
+document.getElementById("downloadRoadmap").onclick=()=>{const a=document.createElement("a"),start=document.getElementById("roadmapStart").value,end=document.getElementById("roadmapEnd").value;a.download=`MCU-roadmap-${start}${start!==end?"-"+end:""}.png`;a.href=document.getElementById("roadmapCanvas").toDataURL("image/png");a.click()};
 document.getElementById("closeRoadmap").onclick=()=>document.getElementById("roadmapPreview").style.display="none";
-document.getElementById("export").onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="mon-calendrier-mcu.json";a.click();URL.revokeObjectURL(a.href)};
+document.getElementById("export").onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="mon-calendrier-mcu.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
 document.getElementById("importBtn").onclick=()=>document.getElementById("fileInput").click();
-document.getElementById("fileInput").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.years))throw 0;data=d;current=data.years[0].year;save();render();alert("Sauvegarde importée.")}catch(err){alert("Fichier de sauvegarde invalide.")}e.target.value=""};
+document.getElementById("fileInput").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.years))throw 0;data=d;normalize();current=data.years[0].year;save();render();alert("Sauvegarde importée.")}catch(err){alert("Fichier de sauvegarde invalide.")}e.target.value=""};
 document.getElementById("reset").onclick=()=>{if(confirm("Effacer toutes les années et recommencer en 2030 ?")){data={years:[freshYear(2030)]};current=2030;save();render()}};
 document.getElementById("homeBtn").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
-if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
 render();
 </script>
 </body></html>

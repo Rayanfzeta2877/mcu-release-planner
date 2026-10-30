@@ -122,40 +122,53 @@ async function drawRoadmap(settings){
  const canvas=document.getElementById("roadmapCanvas"),ctx=canvas.getContext("2d");
  const W=Math.max(1900,Math.min(6200,all.length*245+180)),H=1320,margin=90,usable=W-margin*2;
  canvas.width=W;canvas.height=H;
- // The roadmap artwork alone uses a clean, solid black background.
  ctx.fillStyle="#000000";ctx.fillRect(0,0,W,H);
- const centerTop=555,centerBottom=735,topDateY=480,bottomDateY=810;
- // Two fine rules frame the phase title; no filled banner.
+ // Compact phase heading, framed by two fine rules.
+ const centerTop=560,centerBottom=700,topDateY=530,bottomDateY=730;
  ctx.strokeStyle="#eeeeef";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(48,centerTop);ctx.lineTo(W-48,centerTop);ctx.moveTo(48,centerBottom);ctx.lineTo(W-48,centerBottom);ctx.stroke();
  const phase=(settings.phase||"PHASE 1").toUpperCase();
  const phaseSize=Math.min(76,Math.max(42,Math.floor(920/Math.max(phase.length,8))));
- drawSpacedText(ctx,phase,W/2,centerTop+91,W-260,phaseSize);
- let subY=centerTop+122;
- if(settings.saga){ctx.textAlign="center";ctx.fillStyle="#c6c6c9";ctx.font="italic 22px 'Helvetica Neue', Arial, sans-serif";ctx.fillText(settings.saga.toUpperCase(),W/2,subY);subY+=23}
+ drawSpacedText(ctx,phase,W/2,centerTop+66,W-260,phaseSize);
+ let subY=centerTop+99;
+ if(settings.saga){ctx.textAlign="center";ctx.fillStyle="#c6c6c9";ctx.font="italic 19px 'Helvetica Neue', Arial, sans-serif";ctx.fillText(settings.saga.toUpperCase(),W/2,subY);subY+=21}
  const span=settings.start===settings.end?String(settings.start):`${settings.start} — ${settings.end}`;
- ctx.textAlign="center";ctx.fillStyle="#92949a";ctx.font="20px 'Helvetica Neue', Arial, sans-serif";ctx.fillText(span,W/2,subY);
+ ctx.textAlign="center";ctx.fillStyle="#92949a";ctx.font="18px 'Helvetica Neue', Arial, sans-serif";ctx.fillText(span,W/2,subY);
  const monthAbbr={Janvier:"JAN",Février:"FEB",Mars:"MAR",Avril:"APR",Mai:"MAY",Juin:"JUN",Juillet:"JUL",Août:"AUG",Septembre:"SEP",Octobre:"OCT",Novembre:"NOV",Décembre:"DEC"};
  const colW=usable/Math.max(1,all.length);
  all.forEach((p,i)=>{
   const x=margin+colW*(i+.5),topSide=i%2===0,day=String(p.selectedDate).padStart(2,"0"),month=monthAbbr[p.month]||String(p.month||"").slice(0,3).toUpperCase();
   const dateY=topSide?topDateY:bottomDateY;
-  const logoTop=topSide?55:850,logoBottom=topSide?400:1230;
-  // Vertical connector from the project date to the corresponding central rule.
-  ctx.strokeStyle="#e8e8e9";ctx.lineWidth=2;ctx.beginPath();
-  if(topSide){ctx.moveTo(x,centerTop);ctx.lineTo(x,dateY+23)}else{ctx.moveTo(x,centerBottom);ctx.lineTo(x,dateY-24)}ctx.stroke();
-  ctx.fillStyle="#f2f2f2";ctx.beginPath();ctx.arc(x,topSide?centerTop:centerBottom,4,0,Math.PI*2);ctx.fill();
-  const dateText=`${month} ${day}, ${p.year}`;ctx.textAlign="center";ctx.font=`700 ${Math.min(27,Math.max(18,colW*.13))}px "Helvetica Neue", Arial, sans-serif`;
-  const dateWidth=ctx.measureText(dateText).width,type=typeShort(p.type);ctx.font="700 15px Arial";const typeWidth=type?ctx.measureText(type).width+15:0;
-  const groupWidth=dateWidth+typeWidth;const left=x-groupWidth/2;
-  ctx.textAlign="left";ctx.font=`700 ${Math.min(27,Math.max(18,colW*.13))}px "Helvetica Neue", Arial, sans-serif`;ctx.fillStyle="#f4f4f5";ctx.fillText(dateText,left,dateY);
-  if(type){ctx.font="700 15px Arial";ctx.fillStyle=p.type==="Film"?"#d5b1b3":p.type==="Série"?"#aebfd4":"#d5c18d";ctx.fillText(type,left+dateWidth+12,dateY)}
-  if(p.logo&&loadedLogos.has(p)){
-   const im=loadedLogos.get(p),maxW=Math.max(95,colW-28),maxH=topSide?300:320,s=Math.min(maxW/im.width,maxH/im.height);
-   const iw=im.width*s,ih=im.height*s;ctx.drawImage(im,x-iw/2,topSide?logoBottom-ih:logoTop,iw,ih);
+  const logoTop=topSide?55:820,logoBottom=topSide?430:1260;
+  const dateText=`${month} ${day}, ${p.year}`;
+  const dateFont=Math.min(27,Math.max(18,colW*.13));
+  ctx.textAlign="left";ctx.font=`700 ${dateFont}px "Helvetica Neue", Arial, sans-serif`;
+  const dateWidth=ctx.measureText(dateText).width,type=typeShort(p.type),circleR=17,gap=12;
+  const groupWidth=dateWidth+(type?gap+circleR*2:0),left=x-groupWidth/2;
+  ctx.fillStyle="#f4f4f5";ctx.fillText(dateText,left,dateY);
+  if(type){
+   const cx=left+dateWidth+gap+circleR,cy=dateY-9;
+   const color=p.type==="Film"?"#c62828":p.type==="Série"?"#1769aa":"#218653";
+   ctx.beginPath();ctx.arc(cx,cy,circleR,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+   ctx.fillStyle="#ffffff";ctx.textAlign="center";ctx.textBaseline="middle";
+   ctx.font=type==="SP"?"700 11px Arial":"700 14px Arial";ctx.fillText(type,cx,cy+0.5);ctx.textBaseline="alphabetic";
+  }
+  // The connector now continues outward from the date toward the project logo.
+  const logo= p.logo&&loadedLogos.has(p)?loadedLogos.get(p):null;
+  let logoX=x,logoY,logoW=0,logoH=0;
+  if(logo){
+   const maxW=Math.max(95,colW-28),maxH=topSide?315:360,scale=Math.min(maxW/logo.width,maxH/logo.height);
+   logoW=logo.width*scale;logoH=logo.height*scale;logoX=x-logoW/2;logoY=topSide?logoBottom-logoH:logoTop;
+   ctx.drawImage(logo,logoX,logoY,logoW,logoH);
   }else{
    ctx.textAlign="center";ctx.fillStyle="#f4f4f5";ctx.font=`700 ${Math.min(29,Math.max(17,colW*.15))}px "Helvetica Neue", Arial, sans-serif`;
-   wrapText(ctx,p.title,x,topSide?logoTop+95:logoTop+105,Math.max(110,colW-28),38,4);
+   const titleY=topSide?logoTop+95:logoTop+105;wrapText(ctx,p.title,x,titleY,Math.max(110,colW-28),38,4);
+   logoY=topSide?logoTop+35:logoTop+35;
   }
+  ctx.strokeStyle="#e8e8e9";ctx.lineWidth=2;ctx.beginPath();
+  if(topSide){const endY=logo?logoY+logoH+12:logoY+100;ctx.moveTo(x,endY);ctx.lineTo(x,dateY-24)}
+  else{const startY=dateY+13;ctx.moveTo(x,startY);ctx.lineTo(x,logoY-18)}
+  ctx.stroke();
+  ctx.fillStyle="#f2f2f2";ctx.beginPath();ctx.arc(x,topSide?centerTop:centerBottom,4,0,Math.PI*2);ctx.fill();
  });
  if(!all.length){ctx.textAlign="center";ctx.fillStyle="#b9bbc4";ctx.font="30px Arial";ctx.fillText("AUCUN PROJET AVEC TITRE ET DATE RETENUE",W/2,900)}
 }

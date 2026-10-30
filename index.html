@@ -168,7 +168,39 @@ document.getElementById("confirmYear").onclick=()=>{const n=+document.getElement
 document.getElementById("createRoadmap").onclick=()=>{document.getElementById("phaseTitle").value="Phase 1";document.getElementById("sagaTitle").value="";document.getElementById("roadmapStart").value=current;document.getElementById("roadmapEnd").value=current;roadmapModal.style.display="flex"};
 document.getElementById("cancelRoadmap").onclick=()=>roadmapModal.style.display="none";
 document.getElementById("generateRoadmapNow").onclick=async()=>{const phase=document.getElementById("phaseTitle").value.trim()||"Phase 1",saga=document.getElementById("sagaTitle").value.trim(),start=+document.getElementById("roadmapStart").value,end=+document.getElementById("roadmapEnd").value;if(!Number.isInteger(start)||!Number.isInteger(end)||start<1900||end>9999||end<start)return alert("Vérifie les années de début et de fin.");const button=document.getElementById("generateRoadmapNow");button.disabled=true;button.textContent="Génération…";try{await drawRoadmap({phase,saga,start,end})}finally{button.disabled=false;button.textContent="Générer"}roadmapModal.style.display="none";const preview=document.getElementById("roadmapPreview");preview.style.display="block";preview.scrollIntoView({behavior:"smooth"})};
-document.getElementById("downloadRoadmap").onclick=()=>{const a=document.createElement("a"),start=document.getElementById("roadmapStart").value,end=document.getElementById("roadmapEnd").value;a.download=`MCU-roadmap-${start}${start!==end?"-"+end:""}.png`;a.href=document.getElementById("roadmapCanvas").toDataURL("image/png");a.click()};
+document.getElementById("downloadRoadmap").onclick=()=>{
+ const button=document.getElementById("downloadRoadmap"),canvas=document.getElementById("roadmapCanvas");
+ const start=document.getElementById("roadmapStart").value,end=document.getElementById("roadmapEnd").value;
+ const filename=`MCU-roadmap-${start}${start!==end?"-"+end:""}.png`;
+ try{
+  if(!canvas.width||!canvas.height)throw new Error("Roadmap vide");
+  // Build the PNG synchronously inside the tap handler so iOS keeps the user gesture
+  // active when the native share sheet is opened.
+  const dataUrl=canvas.toDataURL("image/png");
+  const raw=atob(dataUrl.split(",")[1]);
+  const bytes=new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
+  const file=new File([bytes],filename,{type:"image/png",lastModified:Date.now()});
+  if(navigator.share){
+   if(navigator.canShare && !navigator.canShare({files:[file]}))throw new Error("Le partage de fichiers n’est pas disponible dans ce navigateur.");
+   button.disabled=true;button.textContent="Ouverture de Photos / partage…";
+   navigator.share({files:[file],title:"Roadmap MCU",text:"Ma roadmap MCU"})
+    .catch(err=>{if(err.name!=="AbortError"){console.error("Partage iOS impossible",err);openRoadmapFallback(dataUrl,filename);}})
+    .finally(()=>{button.disabled=false;button.textContent="Enregistrer l'image PNG";});
+  }else{
+   openRoadmapFallback(dataUrl,filename);
+  }
+ }catch(err){
+  console.error("Export PNG impossible",err);
+  alert("Impossible de préparer l’image PNG. Ferme l’aperçu, génère à nouveau la roadmap, puis réessaie.");
+ }
+};
+function openRoadmapFallback(dataUrl,filename){
+ const w=window.open();
+ if(w){w.document.title=filename;w.document.body.style.cssText="margin:0;background:#111;display:grid;place-items:center;min-height:100vh";const img=w.document.createElement("img");img.src=dataUrl;img.alt="Roadmap MCU";img.style.cssText="max-width:100%;height:auto";w.document.body.appendChild(img);}
+ else{alert("Safari a bloqué l’ouverture de l’image. Appuie sur le bouton de partage de Safari, puis choisis Enregistrer l’image si cette option apparaît.");}
+}
+
 document.getElementById("closeRoadmap").onclick=()=>document.getElementById("roadmapPreview").style.display="none";
 document.getElementById("export").onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="mon-calendrier-mcu.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
 document.getElementById("importBtn").onclick=()=>document.getElementById("fileInput").click();

@@ -115,34 +115,52 @@ function makeRoadmapProjects(start,end){const result=[];data.years.filter(y=>y.y
 function wrapText(ctx,text,x,y,maxWidth,lineHeight,maxLines=2){const words=String(text).split(/\s+/);let line="",lines=[];for(const word of words){const test=line?line+" "+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word}else line=test}if(line)lines.push(line);if(lines.length>maxLines){lines=lines.slice(0,maxLines);let last=lines[maxLines-1];while(ctx.measureText(last+"…").width>maxWidth&&last.length>2)last=last.slice(0,-1);lines[maxLines-1]=last+"…"}lines.forEach((v,i)=>ctx.fillText(v,x,y+i*lineHeight))}
 function rounded(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 async function drawRoadmap(settings){
- const groups=makeRoadmapProjects(settings.start,settings.end),all=groups.flatMap(g=>g.entries);const loadedLogos=new Map();await Promise.all(all.filter(p=>p.logo).map(p=>new Promise(resolve=>{const im=new Image();im.onload=()=>{loadedLogos.set(p,im);resolve()};im.onerror=resolve;im.src=p.logo})));const canvas=document.getElementById("roadmapCanvas"),ctx=canvas.getContext("2d"),W=1800,margin=105,gap=34,cardW=(W-margin*2-gap)/2,cardH=300,yearHeader=100,top=540,rowGap=28;
- let H=top+70;groups.forEach(g=>{H+=yearHeader+Math.ceil(g.entries.length/2)*(cardH+rowGap)+35});H+=115;canvas.width=W;canvas.height=Math.max(1200,H);
- ctx.fillStyle="#0b0c10";ctx.fillRect(0,0,W,H);
- const grad=ctx.createLinearGradient(0,0,W,H);grad.addColorStop(0,"#151821");grad.addColorStop(.5,"#0b0c10");grad.addColorStop(1,"#171116");ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
- ctx.textAlign="center";ctx.fillStyle="#d7b66a";ctx.font="bold 48px Arial";ctx.fillText("MARVEL STUDIOS",W/2,105);
- ctx.fillStyle="#c8323c";ctx.fillRect(W/2-180,145,360,5);
- ctx.fillStyle="#f5f5f7";ctx.font="bold 100px Arial";ctx.fillText((settings.phase||"PHASE 1").toUpperCase(),W/2,290);
- if(settings.saga){ctx.fillStyle="#d7b66a";ctx.font="bold 34px Arial";ctx.fillText(settings.saga.toUpperCase(),W/2,355)}
- ctx.fillStyle="#b9bbc4";ctx.font="bold 48px Arial";ctx.fillText(settings.start===settings.end?String(settings.start):`${settings.start} — ${settings.end}`,W/2,435);
- ctx.fillStyle="#686d79";ctx.font="22px Arial";ctx.fillText("THEATRICAL & STREAMING RELEASES",W/2,485);
- let y=top;
- groups.forEach(group=>{
-  ctx.textAlign="left";ctx.fillStyle="#d7b66a";ctx.font="bold 54px Arial";ctx.fillText(String(group.year),margin,y+57);
-  ctx.fillStyle="#343844";ctx.fillRect(margin+190,y+27,W-margin*2-190,2);y+=yearHeader;
-  group.entries.forEach((p,i)=>{
-   const col=i%2,row=Math.floor(i/2),x=margin+col*(cardW+gap),cy=y+row*(cardH+rowGap);
-   ctx.fillStyle="#171a22";ctx.strokeStyle="#3b3f4b";ctx.lineWidth=2;rounded(ctx,x,cy,cardW,cardH,24);ctx.fill();ctx.stroke();
-   ctx.fillStyle=p.type==="Film"?"#9f2630":p.type==="Série"?"#31547c":"#76602f";rounded(ctx,x+24,cy+22,145,40,18);ctx.fill();
-   ctx.textAlign="center";ctx.fillStyle="#fff";ctx.font="bold 20px Arial";ctx.fillText(p.type.toUpperCase(),x+96,cy+49);
-   const day=String(p.selectedDate).padStart(2,"0"),mi=(monthOrder[p.month]??0);ctx.textAlign="left";ctx.fillStyle="#d7b66a";ctx.font="bold 34px Arial";ctx.fillText(`${day} ${p.month.toUpperCase()} ${p.year}`,x+26,cy+112);
-   if(p.logo&&loadedLogos.has(p)){const im=loadedLogos.get(p),maxW=cardW-70,maxH=115,s=Math.min(maxW/im.width,maxH/im.height);const iw=im.width*s,ih=im.height*s;ctx.drawImage(im,x+(cardW-iw)/2,cy+140+(maxH-ih)/2,iw,ih)}
-   else{ctx.fillStyle="#f4f4f6";ctx.font="bold 35px Arial";wrapText(ctx,p.title,x+28,cy+190,cardW-56,43,2)}
-   if(p.done){ctx.textAlign="right";ctx.fillStyle="#6fc69a";ctx.font="bold 18px Arial";ctx.fillText("DATE VALIDÉE",x+cardW-25,cy+49)}
-  });
-  y+=Math.ceil(group.entries.length/2)*(cardH+rowGap)+35;
+ const groups=makeRoadmapProjects(settings.start,settings.end),all=groups.flatMap(g=>g.entries);
+ const loadedLogos=new Map();
+ await Promise.all(all.filter(p=>p.logo).map(p=>new Promise(resolve=>{const im=new Image();im.onload=()=>{loadedLogos.set(p,im);resolve()};im.onerror=resolve;im.src=p.logo})));
+ const canvas=document.getElementById("roadmapCanvas"),ctx=canvas.getContext("2d");
+ const W=Math.max(1800,Math.min(5200,all.length*205+180)),H=1120,margin=90,usable=W-margin*2;
+ canvas.width=W;canvas.height=H;
+ // Deep-space background with restrained stars, inspired by the supplied Marvel slate reference.
+ ctx.fillStyle="#050609";ctx.fillRect(0,0,W,H);
+ let seed=31;for(let i=0;i<Math.floor(W*H/5200);i++){seed=(seed*16807)%2147483647;const x=(seed%W);seed=(seed*16807)%2147483647;const y=(seed%H);const a=.12+((seed%60)/100);ctx.fillStyle=`rgba(220,225,245,${a})`;ctx.beginPath();ctx.arc(x,y,((seed%10)===0?2:1),0,Math.PI*2);ctx.fill()}
+ const glow=ctx.createRadialGradient(W/2,500,40,W/2,500,W*.65);glow.addColorStop(0,"rgba(39,45,83,.22)");glow.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);
+ ctx.textAlign="center";ctx.fillStyle="#f5f5f7";ctx.font="bold 30px Arial";ctx.fillText("MARVEL STUDIOS",W/2,58);
+ ctx.fillStyle="#c8323c";ctx.fillRect(W/2-100,76,200,4);
+ // Central phase divider, with the user-defined phase name as the focal point.
+ const bandY=424,bandH=112;
+ ctx.fillStyle="#f2f2f4";ctx.fillRect(45,bandY,W-90,3);ctx.fillRect(45,bandY+bandH,W-90,3);
+ ctx.fillStyle="#08090d";ctx.fillRect(45,bandY+4,W-90,bandH-1);
+ ctx.fillStyle="#f5f5f7";ctx.font=`bold ${Math.min(66,Math.max(34,900/(settings.phase||"PHASE 1").length))}px Arial`;
+ ctx.fillText((settings.phase||"PHASE 1").toUpperCase(),W/2,bandY+70);
+ if(settings.saga){ctx.fillStyle="#c5c7ce";ctx.font="bold 20px Arial";ctx.fillText(settings.saga.toUpperCase(),W/2,bandY+98)}
+ const span=settings.start===settings.end?String(settings.start):`${settings.start} — ${settings.end}`;
+ ctx.fillStyle="#aeb2bd";ctx.font="22px Arial";ctx.fillText(span,W/2,bandY-24);
+ const colW=usable/Math.max(1,all.length);
+ all.forEach((p,i)=>{
+  const x=margin+colW*(i+.5),topSide=i%2===0,day=String(p.selectedDate).padStart(2,"0"),month=(p.month||"").toUpperCase();
+  const dateY=topSide?bandY-42:bandY+bandH+38;
+  const logoTop=topSide?95:625,logoBottom=topSide?320:920;
+  const stemStart=topSide?bandY-4:bandY+bandH+4,stemEnd=topSide?dateY+14:dateY-15;
+  ctx.strokeStyle="#e5e6eb";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,stemStart);ctx.lineTo(x,stemEnd);ctx.stroke();
+  ctx.fillStyle="#f5f5f7";ctx.beginPath();ctx.arc(x,stemStart,4,0,Math.PI*2);ctx.fill();
+  ctx.textAlign="center";ctx.fillStyle="#f5f5f7";ctx.font=`bold ${Math.min(24,Math.max(15,colW*.13))}px Arial`;
+  ctx.fillText(`${month} ${day}, ${p.year}`,x,dateY);
+  // Optional small production-type label, kept subtle so logos remain dominant.
+  ctx.fillStyle=p.type==="Film"?"#d8a1a5":p.type==="Série"?"#9fb8d8":"#d7c28d";ctx.font="bold 12px Arial";
+  ctx.fillText(String(p.type||"").toUpperCase(),x,topSide?logoTop-12:logoBottom+25);
+  const areaTop=topSide?logoTop:logoTop,areaBottom=topSide?logoBottom:logoBottom;
+  if(p.logo&&loadedLogos.has(p)){
+   const im=loadedLogos.get(p),maxW=Math.max(90,colW-26),maxH=topSide?190:220,s=Math.min(maxW/im.width,maxH/im.height);
+   const iw=im.width*s,ih=im.height*s;ctx.drawImage(im,x-iw/2,topSide?areaBottom-ih:areaTop,iw,ih);
+  }else{
+   ctx.fillStyle="#f5f5f7";ctx.font=`bold ${Math.min(27,Math.max(16,colW*.16))}px Arial`;
+   wrapText(ctx,p.title,x,topSide?logoTop+45:logoTop+55,Math.max(100,colW-24),34,4);
+  }
+  if(p.done){ctx.fillStyle="#75c99b";ctx.font="bold 12px Arial";ctx.fillText("SORTIE VALIDÉE",x,topSide?logoBottom+18:logoTop-18)}
  });
- ctx.textAlign="center";ctx.fillStyle="#777b86";ctx.font="20px Arial";ctx.fillText("MARVEL RELEASE PLANNER  •  FAN-MADE ROADMAP",W/2,H-48);
- if(!all.length){ctx.fillStyle="#b9bbc4";ctx.font="32px Arial";ctx.fillText("AUCUN PROJET AVEC TITRE ET DATE RETENUE",W/2,top+80)}
+ ctx.textAlign="center";ctx.fillStyle="#777b86";ctx.font="16px Arial";ctx.fillText("MARVEL RELEASE PLANNER  •  FAN-MADE ROADMAP",W/2,H-28);
+ if(!all.length){ctx.fillStyle="#b9bbc4";ctx.font="30px Arial";ctx.fillText("AUCUN PROJET AVEC TITRE ET DATE RETENUE",W/2,700)}
 }
 
 const yearModal=document.getElementById("yearModalBack"),roadmapModal=document.getElementById("roadmapModalBack");

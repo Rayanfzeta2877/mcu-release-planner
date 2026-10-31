@@ -126,22 +126,23 @@ async function drawRoadmap(settings){
  canvas.width=W;canvas.height=H;
  ctx.fillStyle="#000000";ctx.fillRect(0,0,W,H);
  // Phase heading: only the phase name remains visible, centered between equally spaced rules.
- const centerY=H/2,centerTop=centerY-66,centerBottom=centerY+66;
+ const centerY=H/2,centerTop=centerY-35,centerBottom=centerY+35;
  ctx.strokeStyle="#eeeeef";ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(34,centerTop);ctx.lineTo(W-34,centerTop);ctx.moveTo(34,centerBottom);ctx.lineTo(W-34,centerBottom);ctx.stroke();
- const phase=(settings.phase||"PHASE 1").toUpperCase();
+ const rawPhase=(settings.phase||"PHASE 1").toUpperCase();
+ const phase=Array.from(rawPhase,ch=>{const code=ch.charCodeAt(0);return (code>=33&&code<=126)?String.fromCharCode(code+0xFEE0):ch}).join("");
  const phaseSize=Math.min(70,Math.max(42,Math.floor(900/Math.max(phase.length,8))));
- drawSpacedText(ctx,phase,W/2,centerY+22,W-220,phaseSize);
+ drawSpacedText(ctx,phase,W/2,centerY+24,W-220,phaseSize);
  const monthAbbr={Janvier:"JAN",Février:"FEB",Mars:"MAR",Avril:"APR",Mai:"MAY",Juin:"JUN",Juillet:"JUL",Août:"AUG",Septembre:"SEP",Octobre:"OCT",Novembre:"NOV",Décembre:"DEC"};
  const colW=usable/Math.max(1,all.length);
  // Dates and type badges stay anchored beside the central axis. Only logos alternate
  // between the outer and inner positions, creating a staggered, nested rhythm.
  const topDateY=centerTop-30,bottomDateY=centerBottom+55;
- const maxLogoH=H*.235;
+ const maxLogoH=H*.285;
  all.forEach((p,i)=>{
   const x=margin+colW*(i+.5),topSide=i%2===0,sideIndex=Math.floor(i/2),tier=sideIndex%2;
   const day=String(p.selectedDate).padStart(2,"0"),month=monthAbbr[p.month]||String(p.month||"").slice(0,3).toUpperCase();
   const logo=p.logo&&loadedLogos.has(p)?loadedLogos.get(p):null;
-  const maxLogoW=Math.max(120,Math.min(300,colW*1.42));
+  const maxLogoW=Math.max(120,Math.min(380,colW*1.72));
   let logoX=x,logoY=0,logoW=0,logoH=0;
   const dateY=topSide?topDateY:bottomDateY;
   if(logo){

@@ -132,28 +132,30 @@ async function drawRoadmap(settings){
  const phaseSize=Math.min(70,Math.max(42,Math.floor(900/Math.max(phase.length,8))));
  drawSpacedText(ctx,phase,W/2,centerY+22,W-220,phaseSize);
  const monthAbbr={Janvier:"JAN",Février:"FEB",Mars:"MAR",Avril:"APR",Mai:"MAY",Juin:"JUN",Juillet:"JUL",Août:"AUG",Septembre:"SEP",Octobre:"OCT",Novembre:"NOV",Décembre:"DEC"};
- const colW=usable/Math.max(1,all.length),topOffsets=[28,104,54,118,34,94],bottomOffsets=[H-390,H-310,H-365,H-300,H-385,H-320];
- const topDateLimit=centerTop-30,bottomDateLimit=centerBottom+36;
+ const colW=usable/Math.max(1,all.length);
+ // Dates and type badges stay anchored beside the central axis. Only logos alternate
+ // between the outer and inner positions, creating a staggered, nested rhythm.
+ const topDateY=centerTop-30,bottomDateY=centerBottom+55;
+ const maxLogoH=H*.235;
  all.forEach((p,i)=>{
-  const x=margin+colW*(i+.5),topSide=i%2===0,sideIndex=Math.floor(i/2),day=String(p.selectedDate).padStart(2,"0"),month=monthAbbr[p.month]||String(p.month||"").slice(0,3).toUpperCase();
+  const x=margin+colW*(i+.5),topSide=i%2===0,sideIndex=Math.floor(i/2),tier=sideIndex%2;
+  const day=String(p.selectedDate).padStart(2,"0"),month=monthAbbr[p.month]||String(p.month||"").slice(0,3).toUpperCase();
   const logo=p.logo&&loadedLogos.has(p)?loadedLogos.get(p):null;
-  const maxLogoW=Math.max(130,colW*1.58),maxLogoH=H*.205;
-  let logoX=x,logoY,logoW=0,logoH=0,dateY;
+  const maxLogoW=Math.max(120,Math.min(300,colW*1.42));
+  let logoX=x,logoY=0,logoW=0,logoH=0;
+  const dateY=topSide?topDateY:bottomDateY;
   if(logo){
    const scale=Math.min(maxLogoW/logo.width,maxLogoH/logo.height);
    logoW=logo.width*scale;logoH=logo.height*scale;logoX=x-logoW/2;
-   logoY=topSide?topOffsets[sideIndex%topOffsets.length]:bottomOffsets[sideIndex%bottomOffsets.length];
-   if(topSide){logoY=Math.min(logoY,topDateLimit-logoH-62)}
-   else{logoY=Math.max(logoY,bottomDateLimit+56)}
+   if(topSide) logoY=tier===0?48:centerTop-logoH-112;
+   else logoY=tier===0?H-logoH-48:centerBottom+112;
    ctx.drawImage(logo,logoX,logoY,logoW,logoH);
-   dateY=topSide?Math.min(topDateLimit,logoY+logoH+48):Math.max(bottomDateLimit,logoY-48);
   }else{
-   const titleFont=Math.min(36,Math.max(22,colW*.23));
+   const titleFont=Math.min(36,Math.max(22,colW*.25));
    ctx.textAlign="center";ctx.fillStyle="#f4f4f5";ctx.font=`700 ${titleFont}px "Helvetica Neue", Arial, sans-serif`;
-   const titleY=topSide?Math.min(topDateLimit-80,topOffsets[sideIndex%topOffsets.length]+100):Math.max(bottomDateLimit+90,bottomOffsets[sideIndex%bottomOffsets.length]+80);
-   wrapText(ctx,p.title,x,titleY,Math.max(130,colW*1.8-30),titleFont*1.18,3);
-   logoY=topSide?titleY-70:titleY-70;
-   dateY=topSide?topDateLimit:bottomDateLimit;
+   const titleY=topSide?(tier===0?105:centerTop-125):(tier===0?H-110:centerBottom+145);
+   wrapText(ctx,p.title,x,titleY,Math.max(120,colW*1.35),titleFont*1.18,3);
+   logoY=topSide?titleY-55:titleY-55;logoH=0;
   }
   const dateText=`${month} ${day}, ${p.year}`;
   const dateFont=Math.min(25,Math.max(17,colW*.125));
@@ -168,10 +170,10 @@ async function drawRoadmap(settings){
    ctx.fillStyle="#ffffff";ctx.textAlign="center";ctx.textBaseline="middle";
    ctx.font=type==="SP"?"700 10px Arial":"700 12px Arial";ctx.fillText(type,cx,cy+.5);ctx.textBaseline="alphabetic";
   }
-  // Short connectors follow each logo/date pair; the stagger alternates on both sides.
+  // Keep the connector long enough to visibly link the fixed date to the staggered logo.
   ctx.strokeStyle="#e8e8e9";ctx.lineWidth=2;ctx.beginPath();
-  if(topSide){const startY=logo?logoY+logoH+12:dateY-100;ctx.moveTo(x,startY);ctx.lineTo(x,dateY-22)}
-  else{const endY=logo?logoY-14:dateY+100;ctx.moveTo(x,dateY+12);ctx.lineTo(x,endY)}
+  if(topSide){const startY=logo?logoY+logoH+12:dateY-95;ctx.moveTo(x,startY);ctx.lineTo(x,dateY-24)}
+  else{const endY=logo?logoY-14:dateY+95;ctx.moveTo(x,dateY+12);ctx.lineTo(x,endY)}
   ctx.stroke();
   ctx.fillStyle="#f2f2f2";ctx.beginPath();ctx.arc(x,topSide?centerTop:centerBottom,3.5,0,Math.PI*2);ctx.fill();
  });
